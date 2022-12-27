@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zareckii.winterfountains.data.login.LoginParams
 import com.zareckii.winterfountains.data.Result
-import com.zareckii.winterfountains.data.success
 import com.zareckii.winterfountains.domain.login.LoginUseCase
-import com.zareckii.winterfountains.domain.login.GetUserTokenUseCase
 import com.zareckii.winterfountains.domain.user.GetUserFirstTokenUseCase
 import com.zareckii.winterfountains.ui.login.model.LoginAction
 import com.zareckii.winterfountains.ui.login.model.LoginViewState
@@ -29,7 +27,7 @@ class LoginViewModel @Inject constructor(
     private val _viewState = MutableStateFlow(LoginViewState())
     val viewState: StateFlow<LoginViewState> = _viewState.asStateFlow()
 
-    fun login(login: String, password: String, name: String) {
+    fun registration() {
 
         _viewState.update { it.copy(isLoading = true) }
 
@@ -41,12 +39,11 @@ class LoginViewModel @Inject constructor(
             )
         }
 
-        /*
         viewModelScope.launch {
             val param = LoginParams(
-                login = login,
-                password = password,
-                name = name,
+                name = _viewState.value.name,
+                login = _viewState.value.login,
+                password = _viewState.value.password,
             )
             val resultRegistration = loginUseCase(param)
 
@@ -71,7 +68,15 @@ class LoginViewModel @Inject constructor(
                 _viewState.update { it.copy(isError = true, isLoading = false) }
             }
         }
-    */
     }
+
+    fun onValueNameChange(value: String) = _viewState.update { it.copy(name = value) }
+
+    fun onValueLoginChange(value: String) = _viewState.update { it.copy(login = value) }
+
+    fun onValuePasswordChange(value: String) = _viewState.update { it.copy(password = value) }
+
+    fun onChangePasswordVisible() =
+        _viewState.update { it.copy(passwordVisible = !_viewState.value.passwordVisible) }
 
 }

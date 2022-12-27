@@ -64,6 +64,5 @@ fun MainScreenView() {
 @Composable
 fun currentRoute(navController: NavHostController): String? {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    Log.e("stas", "route = ${navBackStackEntry?.destination?.route}")
     return navBackStackEntry?.destination?.route
 }

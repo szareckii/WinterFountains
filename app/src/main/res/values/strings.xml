@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">WinterFountains</string>
+    <string name="login_label">Login</string>
+    <string name="password_label">Password</string>
+    <string name="name_label">Name</string>
+    <string name="too_much_letters">Много буков</string>
+    <string name="registration_label">Registration</string>
+    <string name="finder_fountains">Finder fountains</string>
 </resources>

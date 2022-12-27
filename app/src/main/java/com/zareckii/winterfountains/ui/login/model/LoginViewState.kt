@@ -10,5 +10,8 @@ data class LoginViewState(
     val loginAction: LoginAction = LoginAction.None,
     val isLoading: Boolean = false,
     val isError: Boolean = false,
-
+    val name: String = "",
+    val login: String = "",
+    val password: String = "",
+    val passwordVisible:  Boolean = false,
 )
