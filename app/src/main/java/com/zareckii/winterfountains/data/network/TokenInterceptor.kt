@@ -15,7 +15,7 @@ class TokenInterceptor @Inject constructor(
         // TODO подумать о других вариантах работы с токеном
 
         val token = runBlocking {
-            preferencesStorage.userToken.first()
+            preferencesStorage.userAccessToken.first()
         }
 
         if (token.isNotEmpty()) {

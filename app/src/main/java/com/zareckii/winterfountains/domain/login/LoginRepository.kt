@@ -4,6 +4,6 @@ import com.zareckii.winterfountains.data.login.Registration
 import com.zareckii.winterfountains.data.login.Token
 
 interface LoginRepository {
-    suspend fun login(login: String, password: String, name: String): Registration
-    suspend fun getFirstToken(login: String, password: String, name: String): Token
+    suspend fun registration(login: String, password: String, name: String): Registration
+
 }

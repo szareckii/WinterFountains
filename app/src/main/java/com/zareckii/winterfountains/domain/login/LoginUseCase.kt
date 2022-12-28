@@ -12,7 +12,7 @@ class LoginUseCase @Inject constructor(
     @IoDispatcher dispatcher: CoroutineDispatcher
 ) : UseCase<LoginParams, Registration>(dispatcher) {
     override suspend fun execute(parameters: LoginParams): Registration =
-        repository.login(
+        repository.registration(
             parameters.login,
             parameters.password,
             parameters.name

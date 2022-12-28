@@ -1,22 +1,29 @@
 package com.zareckii.winterfountains.ui.login
 
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -33,6 +40,7 @@ import com.zareckii.winterfountains.ui.login.model.LoginAction
 import com.zareckii.winterfountains.ui.login.model.LoginViewState
 import com.zareckii.winterfountains.ui.theme.AppTheme
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
@@ -50,16 +58,17 @@ fun LoginScreen(
     val focusRequesterPassword = remember { FocusRequester() }
 
     val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
-    LaunchedEffect(Unit) { focusRequesterName.requestFocus() }
+//    LaunchedEffect(Unit) { focusRequesterName.requestFocus() }
 
     with(viewState) {
         Scaffold(backgroundColor = AppTheme.colors.primaryBackground) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(24.dp)
-                    .wrapContentSize(Alignment.Center),
+                    .verticalScroll(rememberScrollState())
+                    .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.weight(1F))
@@ -135,19 +144,22 @@ fun LoginScreen(
                     isError = password.length >= maxLetterPassword,
                     errorMessage = if (password.length >= maxLetterPassword) stringResource(R.string.too_much_letters) else "",
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password
+                    ),
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     trailingIcon = {
                         val image = if (passwordVisible)
                             Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
                         val description = if (passwordVisible) "Hide password" else "Show password"
-                        IconButton(onClick = { viewModel.onChangePasswordVisible() }) {
-                            Icon(imageVector = image, description)
-                        }
+                        if (password.isNotEmpty())
+                            IconButton(onClick = { viewModel.onChangePasswordVisible() }) {
+                                Icon(imageVector = image, description)
+                            }
                     }
                 )
-                Spacer(modifier = Modifier.height(16.dp))
                 Spacer(modifier = Modifier.weight(1F))
                 Spacer(modifier = Modifier.height(16.dp))
                 ButtonWithText(

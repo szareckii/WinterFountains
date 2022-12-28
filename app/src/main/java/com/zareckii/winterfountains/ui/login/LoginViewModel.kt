@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zareckii.winterfountains.data.login.LoginParams
 import com.zareckii.winterfountains.data.Result
+import com.zareckii.winterfountains.data.user.SaveUserAccessTokenUseCase
+import com.zareckii.winterfountains.data.user.SaveUserRefreshTokenUseCase
 import com.zareckii.winterfountains.domain.login.LoginUseCase
 import com.zareckii.winterfountains.domain.user.GetUserFirstTokenUseCase
 import com.zareckii.winterfountains.ui.login.model.LoginAction
@@ -17,11 +19,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val getUserFirstTokenUseCase: GetUserFirstTokenUseCase
+    private val getUserFirstTokenUseCase: GetUserFirstTokenUseCase,
+    private val saveUserAccessTokenUseCase: SaveUserAccessTokenUseCase,
+    private val saveUserRefreshTokenUseCase: SaveUserRefreshTokenUseCase,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(LoginViewState())
@@ -30,14 +33,6 @@ class LoginViewModel @Inject constructor(
     fun registration() {
 
         _viewState.update { it.copy(isLoading = true) }
-
-        _viewState.update {
-            it.copy(
-                loginAction = LoginAction.GetTokenSuccess,
-                isError = true,
-                isLoading = false
-            )
-        }
 
         viewModelScope.launch {
             val param = LoginParams(
@@ -48,14 +43,17 @@ class LoginViewModel @Inject constructor(
             val resultRegistration = loginUseCase(param)
 
             if (resultRegistration is Result.Success) {
-                Log.e("stas", "Success - $resultRegistration")
                 val resultToken = getUserFirstTokenUseCase(param)
+
                 if (resultToken is Result.Success) {
                     Log.e("stas", "Token Success - $resultToken")
+
+                    saveUserAccessTokenUseCase(resultToken.data.accessToken)
+                    saveUserRefreshTokenUseCase(resultToken.data.refreshToken)
+
                     _viewState.update {
                         it.copy(
                             loginAction = LoginAction.GetTokenSuccess,
-                            isError = true,
                             isLoading = false
                         )
                     }

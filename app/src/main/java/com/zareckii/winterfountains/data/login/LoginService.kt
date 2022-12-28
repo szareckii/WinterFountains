@@ -1,8 +1,6 @@
 package com.zareckii.winterfountains.data.login
 
 import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
 interface LoginService {
@@ -17,12 +15,8 @@ interface LoginService {
 //    ): Registration
 
     @POST("client-login.php")
-    suspend fun login(
+    suspend fun registration(
         @Body dataModal: LoginModal
     ): Registration
 
-    @POST("client-login.php")
-    suspend fun getFirstToken(
-        @Body dataModal: LoginModal
-    ): Token
 }

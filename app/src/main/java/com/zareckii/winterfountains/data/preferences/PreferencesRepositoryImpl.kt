@@ -16,15 +16,23 @@ class PreferencesRepositoryImpl @Inject constructor(
     }
 
     object PreferencesKeys {
-        val USER_TOKEN = stringPreferencesKey("user_token")
+        val USER_ACCESS_TOKEN = stringPreferencesKey("user_access_token")
+        val USER_REFRESH_TOKEN = stringPreferencesKey("user_refresh_token")
 
     }
 
-    override suspend fun setUserToken(token: String) {
-        dataStore.setValue(PreferencesKeys.USER_TOKEN, token)
+    override suspend fun setUserAccessToken(token: String) {
+        dataStore.setValue(PreferencesKeys.USER_ACCESS_TOKEN, token)
     }
 
-    override val userToken: Flow<String> =
-        dataStore.getFlowValue(PreferencesKeys.USER_TOKEN, "")
+    override suspend fun setUserRefreshToken(token: String) {
+        dataStore.setValue(PreferencesKeys.USER_REFRESH_TOKEN, token)
+    }
+
+    override val userAccessToken: Flow<String> =
+        dataStore.getFlowValue(PreferencesKeys.USER_ACCESS_TOKEN, "")
+
+    override val userRefreshToken: Flow<String> =
+        dataStore.getFlowValue(PreferencesKeys.USER_ACCESS_TOKEN, "")
 }
 

@@ -12,9 +12,7 @@ class LoginRepositoryImpl @Inject constructor(
 //    override suspend fun getRegistration(): Login =
 //        dataSource.registration()
 
-    override suspend fun login(login: String, password: String, name: String): Registration =
-        dataSource.login(login, password, name)
+    override suspend fun registration(login: String, password: String, name: String): Registration =
+        dataSource.registration(login, password, name)
 
-    override suspend fun getFirstToken(login: String, password: String, name: String): Token =
-        dataSource.getFirstToken(login, password, name)
 }
